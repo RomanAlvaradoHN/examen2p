@@ -76,61 +76,11 @@ class ServerSocket:
 
 
 
-    
 
 
-    ############################################################################
-    #CONTROLADOR DE RESPUESTAS
-    ############################################################################
-    def __procesar_respuesta(self, trama):
-        data = self.__desglosar_trama(trama)
-
-        if(not data['estatus'] == 'rejected'):
-            persona = ''
-            obervacion = ''
-
-            #determinando nivel de adultez ----------------------------------------
-            if data['genero'] == 'Femenino' and data['edad'] == 'Menor de Edad':
-                persona = "una niña menor de edad"
-
-            elif data['genero'] == 'Masculino' and data['edad'] == 'Menor de Edad':
-                persona = "un niño menor de edad"
-            
-            elif data['genero'] == 'Femenino' and data['edad'] == 'Adulto':
-                persona = "una mujer adulta mayor de edad"
-
-            elif data['genero'] == 'Masculino' and data['edad'] == 'Adulto':
-                persona = "un hombre adulto mayor de edad"
-            
-            elif data['genero'] == 'Femenino' and data['edad'] == 'Tercera Edad':
-                persona = "una señora de tercera edad"
-
-            elif data['genero'] == 'Masculino' and data['edad'] == 'Tercera Edad':
-                persona = "un señor de tercera edad"
-
-            
-            #obervaciones ---------------------------------------------------------
-            fnac = data["fecha_nacimiento"]
-            currentdate = datetime.datetime.now()
-            real_age = (currentdate.year - fnac.year)
-            if real_age != data["anios"]:
-                observacion = f"Sin embargo, observo que tu fecha de nacimiento ({fnac.strftime('%d-%m-%Y')}), no concuerda con tu edad de {data['anios']} años."
-
-            
-            msj = f"Hola {data['nombre']}, veo que eres del país de {data['pais']} y tienes {data['anios']} años, lo que indica que eres {persona}. {obervacion}"
-            data.update({'response': msj})
-
-        return data
 
 
-    
-    
-    
-    
-    
-    
-    
-    
+
     ############################################################################
     #CONTROLADOR DE TRAMAS
     ############################################################################
@@ -207,7 +157,14 @@ class ServerSocket:
         mes = trama[9:11]
         dia = trama[11:13]
         if anio.isnumeric() and mes.isnumeric() and dia.isnumeric():
-            desgloce['fecha_nacimiento'] = datetime.datetime(int(anio, 10), int(mes, 10), int(dia, 10))
+            anio = int(anio, 10)
+            mes = int(mes, 10)
+            dia = int(dia, 10)
+            
+            if (mes in range(1, 13)) and (dia in range(1,32)):
+                desgloce['fecha_nacimiento'] = datetime.date(anio, mes, dia)
+            else:
+                return {'estatus': 'rejected'}
         else:
             return {'estatus': 'rejected'}
         
@@ -217,6 +174,64 @@ class ServerSocket:
 
 
         return desgloce
+
+
+
+
+
+
+
+
+    
+
+
+    ############################################################################
+    #CONTROLADOR DE RESPUESTAS
+    ############################################################################
+    def __procesar_respuesta(self, trama):
+        data = self.__desglosar_trama(trama)
+
+        if(not data['estatus'] == 'rejected'):
+            persona = ''
+            obervacion = ''
+
+            #determinando nivel de adultez ----------------------------------------
+            if data['genero'] == 'Femenino' and data['edad'] == 'Menor de Edad':
+                persona = "una niña menor de edad"
+
+            elif data['genero'] == 'Masculino' and data['edad'] == 'Menor de Edad':
+                persona = "un niño menor de edad"
+            
+            elif data['genero'] == 'Femenino' and data['edad'] == 'Adulto':
+                persona = "una mujer adulta mayor de edad"
+
+            elif data['genero'] == 'Masculino' and data['edad'] == 'Adulto':
+                persona = "un hombre adulto mayor de edad"
+            
+            elif data['genero'] == 'Femenino' and data['edad'] == 'Tercera Edad':
+                persona = "una señora de tercera edad"
+
+            elif data['genero'] == 'Masculino' and data['edad'] == 'Tercera Edad':
+                persona = "un señor de tercera edad"
+
+            
+            #obervaciones ---------------------------------------------------------
+            fnac = data["fecha_nacimiento"]
+            currentdate = datetime.datetime.now()
+            real_age = (currentdate.year - fnac.year)
+            if real_age != data["anios"]:
+                observacion = f"Sin embargo, observo que tu fecha de nacimiento ({fnac.strftime('%d-%m-%Y')}), no concuerda con tu edad de {data['anios']} años."
+
+            
+            msj = f"Hola {data['nombre']}, veo que eres del país de {data['pais']} y tienes {data['anios']} años, lo que indica que eres {persona}. {obervacion}"
+            data.update({'response': msj})
+
+        return data
+
+
+    
+    
+    
 
 
 
