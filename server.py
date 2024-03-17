@@ -65,18 +65,8 @@ class ServerSocket:
 
                 if data["operacion"] == "consultar-trama":                   
                     trama = self.__desglosar_trama(data['trama'])
-
-                    print("trama:---------")
-                    print(trama)
-
-                    
-
-
                     resp = self.__procesar_respuesta(trama)
 
-                    print("\n\n resp:---------")
-                    print(resp)
-                    
                     client_socket.send(json.dumps(resp).encode("utf-8"))
 
 
@@ -222,8 +212,10 @@ class ServerSocket:
         
         
         
-        resp = f"Hola {data['nombre']}, veo que eres del país de {data['pais']} y tienes {data['anios']} años, lo que indica que eres {persona}. {obervacion}"
-        return data.update({"response": resp})
+        msj = f"Hola {data['nombre']}, veo que eres del país de {data['pais']} y tienes {data['anios']} años, lo que indica que eres {persona}. {obervacion}"
+        data.update({"response": msj})
+
+        return data
 
 
 
