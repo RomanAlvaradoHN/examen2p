@@ -210,12 +210,10 @@ class ServerSocket:
             observacion = f"Sin embargo, observo que tu fecha de nacimiento ({fnac.strftime('%d-%m-%Y')}), no concuerda con tu edad de {data['anios']} años."
 
         
-        
-        
         msj = f"Hola {data['nombre']}, veo que eres del país de {data['pais']} y tienes {data['anios']} años, lo que indica que eres {persona}. {obervacion}"
-        data.update({"response": msj})
+        
 
-        return data
+        return {"estatus": data['estatus'], "response": msj}
 
 
 
