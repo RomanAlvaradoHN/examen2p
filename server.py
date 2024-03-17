@@ -217,9 +217,8 @@ class ServerSocket:
             
             #obervaciones ---------------------------------------------------------
             aux = data["fecha_nacimiento"]
-            fnac = datetime.date(aux['anio'], aux['mes'], aux['dia'])
-            currentdate = datetime.datetime.now()
-            real_age = (currentdate.year - fnac.year)
+            real_age = (datetime.date.today().year - aux['anio'])
+            print('\n\n real age: ', real_age, "\n\n")
             if real_age != data["anios"]:
                 observacion = f"Sin embargo, observo que tu fecha de nacimiento ({fnac.strftime('%d-%m-%Y')}), no concuerda con tu edad de {data['anios']} años."
 
