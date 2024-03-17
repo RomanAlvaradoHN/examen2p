@@ -162,7 +162,7 @@ class ServerSocket:
             dia = int(dia, 10)
             
             if (mes in range(1, 13)) and (dia in range(1,32)):
-                desgloce['fecha_nacimiento'] = datetime.date(anio, mes, dia)
+                desgloce['fecha_nacimiento'] = {'anio': anio, 'mes': mes, 'dia': dia}
             else:
                 return {'estatus': 'rejected'}
         else:
@@ -216,7 +216,8 @@ class ServerSocket:
 
             
             #obervaciones ---------------------------------------------------------
-            fnac = data["fecha_nacimiento"]
+            aux = data["fecha_nacimiento"]
+            fnac = datetime.date(aux['anio'], aux['mes'], aux['dia'])
             currentdate = datetime.datetime.now()
             real_age = (currentdate.year - fnac.year)
             if real_age != data["anios"]:
@@ -225,6 +226,8 @@ class ServerSocket:
             
             msj = f"Hola {data['nombre']}, veo que eres del país de {data['pais']} y tienes {data['anios']} años, lo que indica que eres {persona}. {obervacion}"
             data.update({'response': msj})
+
+            
 
         return data
 
