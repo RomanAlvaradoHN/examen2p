@@ -4,6 +4,7 @@ import tkinter as tk
 from tkinter import messagebox
 import json
 import os
+from utilities import Utilities
 
 ############################################################################
 #CONSTRUCCION DE LA VENTANA
@@ -13,9 +14,9 @@ class Ventana():
         self.sockt = params["sockt"]
         
         self.plogin = tk.Tk()
-        self.plogin.title("Login")
+        self.plogin.title("Examen 2p")
         self.plogin.geometry("650x350")
-        colorFondo = "white"
+        colorFondo = "sky blue"
         self.plogin.configure(bg=colorFondo)
         fuente = ("Arial Black", 12)
 
@@ -74,7 +75,7 @@ class ClientSocket():
     def __init__(self, params):
         server_ip = params["server_ip"]
         server_port = params["server_port"]
-        self.utils = params["utils"]
+        self.utils = Utilities()
         
         self.server_response = None
 
@@ -112,48 +113,6 @@ class ClientSocket():
 
 
 
-############################################################################
-#Manejador de errores de socket
-############################################################################
-class Utilities():
-    def error_handler(self, e):
-        msj = ""
-
-        if(type(e) is KeyboardInterrupt):
-            msj = "Script terminado por teclado"
-
-        elif(type(e) is ValueError):
-            msj = "Usuario abandonó"
-
-        elif(type(e) is OSError):
-            msj = "Direccion en uso. Utilize: ss -ltpn | grep [server_port]"
-
-        elif(type(e) is ConnectionRefusedError):
-            msj = "Conexion rechazada. Valide que el servidor este activo y a la escucha"
-
-        elif(type(e) is ConnectionResetError):
-            msj = "Cliente desconectado"
-            
-        elif(type(e) is ModuleNotFoundError):
-            msj = "Error con la base de datos:\n{e}"
-
-        else:
-            msj = f"Error: {type(e)}\n{e}"
-
-        self.clear_console()
-        print(msj + "\n\n")
-        exit()
-
-
-    #Limpiar pantalla =====================================================
-    def clear_console(self):
-        if os.name == 'nt':  # Windows
-            os.system('cls')
-        else:  # Linux, Unix, macOS, POSIX
-            os.system('clear')
-
-
-
 
 
 ############################################################################
@@ -163,7 +122,6 @@ parametros = {
     "sockt": ClientSocket({
         "server_ip": "ec2-18-117-221-247.us-east-2.compute.amazonaws.com",
         "server_port": 9999,
-        "utils": Utilities()
     })
 }
 

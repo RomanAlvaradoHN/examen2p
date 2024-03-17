@@ -3,6 +3,7 @@ import threading
 import json
 import datetime
 import os
+from utilities import Utilities
 
 ############################################################################
 #SOCKET SERVER
@@ -13,7 +14,7 @@ class ServerSocket:
     def __init__(self, params):
         host = params["server_ip"]
         port = params["server_port"]
-        self.utils = params["utils"]
+        self.utils = Utilities()
 
         try:
             self.utils.clear_console()
@@ -219,46 +220,6 @@ class ServerSocket:
 
 
 
-############################################################################
-#Manejador de errores de socket
-############################################################################
-class Utilities():
-    def error_handler(self, e):
-        msj = ""
-
-        if(type(e) is KeyboardInterrupt):
-            msj = "Script terminado por teclado"
-
-        elif(type(e) is ValueError):
-            msj = "Usuario abandonó"
-
-        elif(type(e) is OSError):
-            msj = "Direccion en uso. Utilize: ss -ltpn | grep [server_port]"
-
-        elif(type(e) is ConnectionRefusedError):
-            msj = "Conexion rechazada. Valide que el servidor este activo y a la escucha"
-
-        elif(type(e) is ConnectionResetError):
-            msj = "Cliente desconectado"
-            
-        elif(type(e) is ModuleNotFoundError):
-            msj = "Error con la base de datos:\n{e}"
-
-        else:
-            msj = f"Error: {type(e)}\n{e}"
-
-        self.clear_console()
-        print(msj + "\n\n")
-        exit()
-
-
-    #Limpiar pantalla =====================================================
-    def clear_console(self):
-        if os.name == 'nt':  # Windows
-            os.system('cls')
-        else:  # Linux, Unix, macOS, POSIX
-            os.system('clear')
-
 
 
 ############################################################################
@@ -269,7 +230,6 @@ if __name__ == "__main__":
     parametros = {
         "server_ip": '172.31.20.154',
         "server_port": 9999,
-        "utils": Utilities()
     }
 
     server = ServerSocket(parametros)
