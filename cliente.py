@@ -3,7 +3,7 @@ import threading
 import tkinter as tk
 from tkinter import messagebox
 import json
-
+import os
 
 ############################################################################
 #CONSTRUCCION DE LA VENTANA
@@ -15,8 +15,8 @@ class Ventana():
         self.plogin = tk.Tk()
         self.plogin.title("Login")
         self.plogin.geometry("650x350")
-
-
+        colorFondo = "white"
+        self.plogin.configure(bg=colorFondo)
         fuente = ("Arial Black", 12)
 
         lbl_trama = tk.Label(self.plogin, text="Ingrese Trama:", font=fuente, bg=colorFondo)
@@ -159,8 +159,9 @@ class Utilities():
 ############################################################################
 parametros = {
     "sockt": ClientSocket({
-        "server_ip": "ec2-3-23-131-140.us-east-2.compute.amazonaws.com",
-        "server_port": 9999
+        "server_ip": "ec2-18-117-221-247.us-east-2.compute.amazonaws.com",
+        "server_port": 9999,
+        "utils": Utilities()
     })
 }
 

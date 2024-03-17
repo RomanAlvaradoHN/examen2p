@@ -85,7 +85,7 @@ class ServerSocket:
     ############################################################################
     #CONTROLADOR DE TRAMAS
     ############################################################################
-    def __desglosar_trama(trama):
+    def __desglosar_trama(self, trama):
         trama = trama.strip().upper() #elimina espacios en blanco en los extremos y convete a mayusculas
 
         #Definicion de categorias, rangos y codigos -------
@@ -154,9 +154,9 @@ class ServerSocket:
         
         
         #Obtener fecha nacimiento -------------------------
-        anio = trama[5:9]
-        mes = trama[9:11]
-        dia = trama[11:13]
+        anio = int(trama[5:9], 10)
+        mes = int(trama[9:11], 10)
+        dia = int(trama[11:13], 10)
         if anio.isnumeric() and mes.isnumeric() and dia.isnumeric():
             resp['fecha_nacimiento'] = datetime.datetime(anio, mes, dia)
         else:
@@ -177,7 +177,7 @@ class ServerSocket:
     ############################################################################
     #CONTROLADOR DE RESPUESTAS
     ############################################################################
-    def __procesar_respuesta(data):
+    def __procesar_respuesta(self, data):
         persona = ''
         obervacion = ''
 
@@ -206,7 +206,7 @@ class ServerSocket:
         currentdate = datetime.datetime.now()
         real_age = (currentdate.year - fnac.year)
         if real_age != date["anios"]:
-            observacion = f"Sin embargo, observo que tu fecha de nacimiento ({fnac.strftime("%d-%m-%Y")}), no concuerda con tu edad de {data["anios"]} años."
+            observacion = f"Sin embargo, observo que tu fecha de nacimiento ({fnac.strftime('%d-%m-%Y')}), no concuerda con tu edad de {data['anios']} años."
 
         resp = f"Hola {data['nombre']}, veo que eres del país de {data['pais']} y tienes {data['anios']} años, lo que indica que eres {persona}. {obervacion}"
 
