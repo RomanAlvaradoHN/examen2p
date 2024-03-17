@@ -135,7 +135,7 @@ class ServerSocket:
         #Obtener edad -------------------------------------
         edad = trama[2:4]
         if edad.isnumeric():
-            for categoria, rango in categoria_edad:
+            for categoria, rango in categoria_edad.items():
                 if int(edad) in rango:
                     resp['edad'] = categoria
                     resp['anios'] = edad
@@ -154,11 +154,11 @@ class ServerSocket:
         
         
         #Obtener fecha nacimiento -------------------------
-        anio = int(trama[5:9], 10)
-        mes = int(trama[9:11], 10)
-        dia = int(trama[11:13], 10)
+        anio = trama[5:9]
+        mes = trama[9:11]
+        dia = trama[11:13]
         if anio.isnumeric() and mes.isnumeric() and dia.isnumeric():
-            resp['fecha_nacimiento'] = datetime.datetime(anio, mes, dia)
+            resp['fecha_nacimiento'] = datetime.datetime(int(anio, 10), int(mes, 10), int(dia, 10))
         else:
             return {'estatus': 'rejected'}
         
@@ -205,7 +205,7 @@ class ServerSocket:
         fnac = data["fecha_nacimiento"]
         currentdate = datetime.datetime.now()
         real_age = (currentdate.year - fnac.year)
-        if real_age != date["anios"]:
+        if real_age != data["anios"]:
             observacion = f"Sin embargo, observo que tu fecha de nacimiento ({fnac.strftime('%d-%m-%Y')}), no concuerda con tu edad de {data['anios']} años."
 
         resp = f"Hola {data['nombre']}, veo que eres del país de {data['pais']} y tienes {data['anios']} años, lo que indica que eres {persona}. {obervacion}"
