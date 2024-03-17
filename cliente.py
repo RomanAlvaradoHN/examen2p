@@ -48,13 +48,15 @@ class Ventana():
             if not self.sockt.server_response: pass
             else:
                 resp = json.loads(self.sockt.server_response)
+                print(resp)
 
-                if resp["estatus"] != "rejected":
+                """if resp["estatus"] != "rejected":
                     messagebox.showinfo("Respuesta", resp["response"])
 
                 else:
                     messagebox.showwarning("Error:", "Trama rechazada")
-                    break
+                    break"""
+                break
 
 
 

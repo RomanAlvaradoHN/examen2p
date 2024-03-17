@@ -65,7 +65,18 @@ class ServerSocket:
 
                 if data["operacion"] == "consultar-trama":                   
                     trama = self.__desglosar_trama(data['trama'])
+
+                    print("trama:---------")
+                    print(trama)
+
+                    
+
+
                     resp = self.__procesar_respuesta(trama)
+
+                    print("\n\n resp:---------")
+                    print(resp)
+                    
                     client_socket.send(json.dumps(resp).encode("utf-8"))
 
 
@@ -208,9 +219,10 @@ class ServerSocket:
         if real_age != data["anios"]:
             observacion = f"Sin embargo, observo que tu fecha de nacimiento ({fnac.strftime('%d-%m-%Y')}), no concuerda con tu edad de {data['anios']} años."
 
+        
+        
+        
         resp = f"Hola {data['nombre']}, veo que eres del país de {data['pais']} y tienes {data['anios']} años, lo que indica que eres {persona}. {obervacion}"
-
-
         return data.update({"response": resp})
 
 
