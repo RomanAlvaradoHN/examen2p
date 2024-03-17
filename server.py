@@ -192,10 +192,10 @@ class ServerSocket:
         data = self.__desglosar_trama(trama)
 
         if(not data['estatus'] == 'rejected'):
-            persona = ''
-            obervacion = ''
-
+            
             #determinando nivel de adultez ----------------------------------------
+            persona = ''
+
             if data['genero'] == 'Femenino' and data['edad'] == 'Menor de Edad':
                 persona = "una niña menor de edad"
 
@@ -215,19 +215,23 @@ class ServerSocket:
                 persona = "un señor de tercera edad"
 
             
-            #obervaciones ---------------------------------------------------------
+
+            #definiendo mensaje ---------------------------------------------------
+            msj = f"Hola {data['nombre']}, veo que eres del país de {data['pais']} y tienes {data['anios']} años, lo que indica que eres {persona}."
+
+
+            #obervaciones (coherencia de edad)--------------------------------------
             aux = data["fecha_nacimiento"]
             fnac = datetime.date(aux['anio'], aux['mes'], aux['dia'])
             real_age = (datetime.date.today().year - aux['anio'])
         
             if real_age != data["anios"]:
-                observacion = f"Sin embargo, observo que tu fecha de nacimiento ({fnac.strftime('%d-%m-%Y')}), no concuerda con tu edad de {data['anios']} años."
+                msj += f" Sin embargo, observo que tu fecha de nacimiento ({fnac.strftime('%d-%m-%Y')}), no concuerda con tu edad de {data['anios']} años."
 
             
-            msj = f"Hola {data['nombre']}, veo que eres del país de {data['pais']} y tienes {data['anios']} años, lo que indica que eres {persona}. {obervacion}"
+            
+            #añadir mensaje en la respuesta del cliente ----------------------------
             data.update({'response': msj})
-
-            
 
         return data
 

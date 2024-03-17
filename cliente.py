@@ -23,7 +23,7 @@ class Ventana():
         lbl_trama = tk.Label(self.plogin, text="Ingrese Trama:", font=fuente, bg=colorFondo)
         lbl_trama.pack()
 
-        self.entry_trama = tk.Entry(self.plogin, font=fuente, width=30, justify='center')
+        self.entry_trama = tk.Entry(self.plogin, font=fuente, width=50, justify='center')
         self.entry_trama.pack()
 
 
