@@ -1,0 +1,40 @@
+Desarrolla un servidor de sockets que permita enviar mensajes de difusión (broadcast) a todos los 
+clientes conectados. La funcionalidad debe ser diseñada de manera que cuando un cliente envíe un 
+mensaje al servidor, este mensaje se retransmita a todos los demás clientes conectados.
+Indica la lógica de broadcast en el servidor. 
+
+
+
+¿Qué estructuras de datos o mecanismos utilizarías para almacenar y administrar las conexiones de los clientes? 
+R// El mecanismo empleado para almacenar y administrar las conexiones (sockets) de los clientes que se implementó fue mediante el uso de listas.
+	La lista en este caso es llamada "client_sockets".
+    
+    
+Proporciona una breve explicación del flujo de trabajo en el servidor para gestionar y difundir mensajes a todos los clientes.
+R// 
+	1. El script servidor, contiene la una clase principal "ServerSocket" la cual en su constructor __init__ levanta el socket en el servidor
+    	y lanza un nuevo hilo "th_new_clients" que estara recibiendo los nuevos sockets cliente.
+        
+        
+    2. Cuando en el hilo de escucha de nuevos sockets cliente detecte un nuevo socket cliente, ese nuevo socket es guardado en la
+    	lista "client_sockets", y luego levanta un nuevo hilo "th_client_controller" que estara a la escucha de los mensajes de ese 
+        nuevo socket cliente.
+     
+     
+    3. Los mensajes que envia el cliente hacia el servidor, son objetos json que contienen sí o sí un key llamado "operacion".
+    	Para el caso de este ejercicio de mensajes broadcast, se implementa un segundo key llamado "msg", el cual contendra el nombre del 
+        remitente + el mensaje.
+        
+    4. Los mensajes que envia el servidor hacia el cliente, son objetos json que contienen sí o sí un key llamado "message". el cual
+    	contiene como valor el mensaje (nombre + mensaje) que posteriormente será enviado a todos los sockets guardados en la lista
+        "client_sockets"
+    
+        
+      
+
+Con la desconexion de los usuario se maneja de la siguiente manera:
+R// Implementando un try-except. La lógica es que cuando el cliente no pueda recibir  un mensaje se dispara una exception ConnectionResetError. 
+	Y cuando el servidor no puede recibir un nuevo mensaje del cliente se dispara una excepcion json.JSONDecodeError.
+    
+    Se añadio el codigo para enviar mensajes bajo esas exepciones.
+

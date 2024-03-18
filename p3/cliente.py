@@ -35,7 +35,9 @@ class ControlPrincipal():
         while True:
             msj = input()
             
-            if msj.lower() == 'exit': break
+            if (msj.lower() == 'exit'):
+                
+                break
 
             #with self.__sockt.lock:
             self.__sockt.server_response = None
@@ -86,7 +88,7 @@ class ClientSocket():
             self.__sockt = socket.socket(socket.AF_INET, socket.SOCK_STREAM)    
             self.__sockt.connect((self.__server_ip, self.__server_port))
 
-            threading.Thread(target=self.receive).start()
+            threading.Thread(name='th_client_socket_receiver', target=self.receive).start()
 
             print("===============================================================")
             print(f"\nSocket Cliente Establecido:\nhost: {self.__server_ip}\nport: {self.__server_port}\n")
@@ -125,7 +127,7 @@ class ClientSocket():
 ############################################################################
 parametros = {
     "sockt": ClientSocket({
-        "server_ip": "ec2-18-216-209-80.us-east-2.compute.amazonaws.com",
+        "server_ip": "ec2-13-59-197-55.us-east-2.compute.amazonaws.com",
         "server_port": 9999,
     })
 }

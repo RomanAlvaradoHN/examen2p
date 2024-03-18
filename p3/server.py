@@ -74,7 +74,7 @@ class ServerSocket:
 
         except (ConnectionResetError, json.JSONDecodeError): #Excepcion "ConnectionResetError" lanzada cuando el cliente no puede recibir el mensaje. Excepcion "json.JSONDecodeError" lanzada cuando el servidor no puede recibir el mensaje.
             for client in self.client_sockets:
-                if client != sockt:
+                if (client != sockt) or (len(self.client_sockets) == 1):
 
                     msg = f"*** {data['msg'].split(': ', 1)[0]} abandonó el chat ***"
                     print(msg)
