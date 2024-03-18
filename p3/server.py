@@ -67,7 +67,9 @@ class ServerSocket:
                 for client in self.client_sockets:
                     if client != sockt:
                         client.send(
-                            json.dumps(data['msg']).encode("utf-8")
+                            json.dumps({
+                                'response': data['msg']                            
+                            }).encode("utf-8")
                         )
 
         """except BaseException as errorType:
