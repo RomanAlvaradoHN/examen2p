@@ -35,7 +35,7 @@ class ServerSocket:
         
         except BaseException as errorType:
             self.utils.error_handler(errorType)
-            self.server_socket.close()
+            #self.server_socket.close()
 
     
     
@@ -52,7 +52,7 @@ class ServerSocket:
 
         except BaseException as errorType:
             self.utils.error_handler(errorType)
-            self.server_socket.close()
+            #self.server_socket.close()
 
 
 
@@ -61,7 +61,7 @@ class ServerSocket:
         try:
             while True:
                 data = json.loads(sockt.recv(1024).decode("utf-8"))
-                #print(data['msg'])
+                print(data['msg'])
 
                 if(data['operacion'] == 'new_message'):
                     for client in self.client_sockets:
@@ -72,14 +72,24 @@ class ServerSocket:
                                 }).encode("utf-8")
                             )
 
+        except (ConnectionResetError, json.JSONDecodeError): #Excepcion "ConnectionResetError" lanzada cuando el cliente no puede recibir el mensaje. Excepcion "json.JSONDecodeError" lanzada cuando el servidor no puede recibir el mensaje.
+            for client in self.client_sockets:
+                if client != sockt:
+
+                    msg = f"*** {data['msg'].split(': ', 1)[0]} abandonó el chat ***"
+                    print(msg)
+
+                    client.send(
+                        json.dumps({
+                            'message': msg
+                        }).encode("utf-8")
+                    )
+            self.client_sockets.pop(self.client_sockets.index(sockt))
+            sockt.close()
+
         except BaseException as errorType:
             self.utils.error_handler(errorType)
-            self.server_socket.close()
-
- 
- 
-
-
+            #self.server_socket.close()
 
 
 
