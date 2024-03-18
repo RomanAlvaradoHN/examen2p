@@ -84,7 +84,9 @@ class ClientSocket():
             self.__utils.clear_console()
             self.__sockt = socket.socket(socket.AF_INET, socket.SOCK_STREAM)    
             self.__sockt.connect((self.__server_ip, self.__server_port))
-                        
+
+            threading.Thread(target=self.receive).start()
+
             print("===============================================================")
             print(f"\nSocket Cliente Establecido:\nhost: {self.__server_ip}\nport: {self.__server_port}\n")
             print("===============================================================")
@@ -105,7 +107,8 @@ class ClientSocket():
     
     #RECEPCION DE MENSAJES DEL SOCKET SERVIDOR ---------------------------
     def receive(self):
-        self.server_response = self.__sockt.recv(1024).decode("utf-8")
+        while True:
+            self.server_response = self.__sockt.recv(1024).decode("utf-8")
 
 
 
