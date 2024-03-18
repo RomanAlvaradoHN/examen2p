@@ -44,7 +44,7 @@ class ServerSocket:
         try:
             while True:
                 new_socket, new_address = self.server_socket.accept()
-                print(f"New client connection from {new_address}")
+                print(f"New client connection from {new_address[0]}")
                 self.client_sockets.append(new_socket)
 
                 #Hilo para comunicacion de cada sockets cliente---------------
@@ -61,6 +61,7 @@ class ServerSocket:
         try:
             while True:
                 data = json.loads(sockt.recv(1024).decode("utf-8"))
+                print(len(self.client_sockets))
                 print(data['msg'])
 
                 if(data['operacion'] == 'new_message'):
