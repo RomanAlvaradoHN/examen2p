@@ -54,7 +54,7 @@ class ControlPrincipal():
         while True:
             if(not self.__sockt.server_response): continue
 
-            print(self.__sockt.server_response)
+            print(self.__sockt.server_response['message'])
 
             self.__sockt.server_response = None
 
