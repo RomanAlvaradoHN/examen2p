@@ -58,20 +58,21 @@ class ServerSocket:
 
     #ORQUESTADOR DE OPERACIONES ------------------------------------------
     def __operation_controller(self, sockt):
-        #try:
-        while True:
-            data = json.loads(sockt.recv(1024).decode("utf-8"))
-            print(data['msg'])
+        try:
+            while True:
+                data = json.loads(sockt.recv(1024).decode("utf-8"))
+                #print(data['msg'])
 
-            if(data['operacion'] == 'new_message'):
-                for client in self.client_sockets:
-                    if client != sockt:
-                        print('enviando...')
-                        client.send(data['msg'].encode("utf-8"))
+                if(data['operacion'] == 'new_message'):
+                    for client in self.client_sockets:
+                        if client != sockt:
+                            client.send(
+                                json.dumps(data['msg']).encode("utf-8")
+                            )
 
-        """except BaseException as errorType:
+        except BaseException as errorType:
             self.utils.error_handler(errorType)
-            self.server_socket.close()"""
+            self.server_socket.close()
 
  
  

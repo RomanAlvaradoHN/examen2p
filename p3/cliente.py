@@ -55,9 +55,9 @@ class ControlPrincipal():
             #with self.__sockt.lock:
             if(not self.__sockt.server_response): continue
             else:
-                resp = json.loads(self.__sockt.server_response)
+                resp = self.__sockt.server_response
                 print(resp)
-                self.__server_responses = None
+                self.__sockt.server_responses = None
 
 
 
@@ -110,7 +110,7 @@ class ClientSocket():
     def receive(self):
         while True:
             #with self.lock:
-            self.server_response = self.__sockt.recv(1024).decode("utf-8")
+            self.server_response = json.loads(self.__sockt.recv(1024).decode("utf-8"))
 
 
 
