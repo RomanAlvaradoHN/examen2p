@@ -43,8 +43,8 @@ class ServerSocket:
     def __client_sockets_listener(self):
         try:
             while True:
-                new_socket = self.server_socket.accept()
-                print(f"New client connection from {new_socket[1][0]}")
+                new_socket, new_address = self.server_socket.accept()
+                print(f"New client connection from {new_address}")
                 self.client_sockets.append(new_socket)
 
                 #Hilo para comunicacion de cada sockets cliente---------------
@@ -57,15 +57,16 @@ class ServerSocket:
 
 
     #ORQUESTADOR DE OPERACIONES ------------------------------------------
-    def __operation_controller(self, client_socket):
+    def __operation_controller(self, sockt):
         try:
             while True:
-                data = json.loads(client_socket[0].recv(1024).decode("utf-8"))                    
+                data = json.loads(sockt.recv(1024).decode("utf-8"))                    
+                print(data)
 
                 if(data['operacion'] == 'new_message'):
                     for client in self.client_sockets:
-                        if client != client_socket:
-                            client[0].send(data['msg'].encode("utf-8"))
+                        if client != sockt:
+                            client.send(data['msg'].encode("utf-8"))
 
         except BaseException as errorType:
             self.utils.error_handler(errorType)
