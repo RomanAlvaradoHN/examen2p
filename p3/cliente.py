@@ -37,8 +37,7 @@ class ControlPrincipal():
             
             if msj.lower() == 'exit': break
 
-            with self.__sockt.lock:
-                self.__sockt.server_response = None
+            self.__sockt.server_response = None
 
             self.__sockt.send(
                 json.dumps({
@@ -52,14 +51,12 @@ class ControlPrincipal():
     #control de respuestas del servidor ----------------------------------
     def __server_responses(self):
         while True:
-            with self.__sockt.lock:
-                
-                if not self.__sockt.server_response:
-                    continue
-                else:
-                    resp = json.loads(self.__sockt.server_response)
-                    print(resp)
-                    self.__server_responses = None
+              
+            if(not self.__sockt.server_response): continue
+            else:
+                resp = json.loads(self.__sockt.server_response)
+                print(resp)
+                self.__server_responses = None
 
 
 
@@ -108,8 +105,7 @@ class ClientSocket():
     
     #RECEPCION DE MENSAJES DEL SOCKET SERVIDOR ---------------------------
     def receive(self):
-        with self.lock:
-            self.server_response = self.__sockt.recv(1024).decode("utf-8")
+        self.server_response = self.__sockt.recv(1024).decode("utf-8")
 
 
 
