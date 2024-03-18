@@ -61,10 +61,12 @@ class ServerSocket:
         try:
             while True:
                 data = json.loads(sockt.recv(1024).decode("utf-8"))
+                print(data['msg'])
 
                 if(data['operacion'] == 'new_message'):
                     for client in self.client_sockets:
                         if client != sockt:
+                            print('enviando...')
                             client.send(data['msg'].encode("utf-8"))
 
         except BaseException as errorType:
