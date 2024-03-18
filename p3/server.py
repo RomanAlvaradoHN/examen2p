@@ -60,7 +60,7 @@ class ServerSocket:
     def __operation_controller(self, client_socket):
         try:
             while True:
-                data = json.loads(client_socket.recv(1024).decode("utf-8"))                    
+                data = json.loads(client_socket[0].recv(1024).decode("utf-8"))                    
 
                 if(data['operacion'] == 'new_message'):
                     for client in self.client_sockets:

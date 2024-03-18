@@ -18,6 +18,8 @@ class ControlPrincipal():
     
         self.__utils.clear_console()
         self.nombre = input("Ingrese su nombre: ")
+        self.__utils.clear_console()
+        print(f"Hello {self.nombre}, wellcome to Socket Messenger\n--------------------------------------------------")
        
         #Nuevo hilo para enviar mensajes del cliente ---------------------
         threading.Thread(name='user_messages', target=self.__user_messages).start()
@@ -84,10 +86,10 @@ class ClientSocket():
         try:
             self.__utils.clear_console()
             self.__sockt = socket.socket(socket.AF_INET, socket.SOCK_STREAM)    
-            self.__sockt.connect((server_ip, server_port))
+            self.__sockt.connect((self.__server_ip, self.__server_port))
                         
             print("===============================================================")
-            print(f"\nSocket Cliente Establecido:\nhost: {server_ip}\nport: {server_port}\n")
+            print(f"\nSocket Cliente Establecido:\nhost: {self.__server_ip}\nport: {self.__server_port}\n")
             print("===============================================================")
 
         except BaseException as errorType: 
