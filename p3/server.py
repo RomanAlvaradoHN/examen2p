@@ -19,60 +19,60 @@ class ServerSocket:
         port = params["server_port"]
         self.utils = Utilities()
 
-        try:
-            self.utils.clear_console()
-            self.clients = []
-            self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            self.server_socket.bind((host, port))
-            self.server_socket.listen(5)
+        #try:
+        self.utils.clear_console()
+        self.clients = []
+        self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.server_socket.bind((host, port))
+        self.server_socket.listen(5)
 
-            #Hilo para recibir los nuevos sockets cliente---------------------------
-            threading.Thread(name='th_new_clients', target = self.__client_sockets_listener).start()
+        #Hilo para recibir los nuevos sockets cliente---------------------------
+        threading.Thread(name='th_new_clients', target = self.__client_sockets_listener).start()
 
-            print("====================================================================")
-            print(f"\n    Servidor escuchando en {host}:{port} \n")
-            print("====================================================================")
+        print("====================================================================")
+        print(f"\n    Servidor escuchando en {host}:{port} \n")
+        print("====================================================================")
         
-        except BaseException as errorType:
+        """except BaseException as errorType:
             self.utils.error_handler(errorType)
-            self.server_socket.close()
+            self.server_socket.close()"""
 
     
     
     #CONTROLADOR DE NUEVOS SOCKET CLIENTE --------------------------------
     def __client_sockets_listener(self):
-        try:
-            while True:
-                new_socket, new_address = self.server_socket.accept()
-                print(f"New client connection from {new_address[0]}")
-                self.client_sockets.append(new_socket)
+        #try:
+        while True:
+            new_socket, new_address = self.server_socket.accept()
+            print(f"New client connection from {new_address[0]}")
+            self.client_sockets.append(new_socket)
 
-                #Hilo para comunicacion de cada sockets cliente---------------
-                threading.Thread(name='th_client_controller', target = self.__operation_controller, args=[new_socket]).start()
+            #Hilo para comunicacion de cada sockets cliente---------------
+            threading.Thread(name='th_client_controller', target = self.__operation_controller, args=[new_socket]).start()
 
-        except BaseException as errorType:
+        """except BaseException as errorType:
             self.utils.error_handler(errorType)
-            self.server_socket.close()
+            self.server_socket.close()"""
 
 
 
     #ORQUESTADOR DE OPERACIONES ------------------------------------------
     def __operation_controller(self, sockt):
-        try:
-            while True:
-                data = json.loads(sockt.recv(1024).decode("utf-8"))
-                #print(data['msg'])
+        #try:
+        while True:
+            data = json.loads(sockt.recv(1024).decode("utf-8"))
+            #print(data['msg'])
 
-                if(data['operacion'] == 'new_message'):
-                    for client in self.client_sockets:
-                        if client != sockt:
-                            client.send(
-                                json.dumps(data['msg']).encode("utf-8")
-                            )
+            if(data['operacion'] == 'new_message'):
+                for client in self.client_sockets:
+                    if client != sockt:
+                        client.send(
+                            json.dumps(data['msg']).encode("utf-8")
+                        )
 
-        except BaseException as errorType:
+        """except BaseException as errorType:
             self.utils.error_handler(errorType)
-            self.server_socket.close()
+            self.server_socket.close()"""
 
  
  

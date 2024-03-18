@@ -52,12 +52,11 @@ class ControlPrincipal():
     #control de respuestas del servidor ----------------------------------
     def __server_responses(self):
         while True:
-            #with self.__sockt.lock:
-            if(not self.__sockt.server_response): continue
-            else:
-                resp = self.__sockt.server_response
-                print(resp)
-                self.__sockt.server_responses = None
+            print("estatus resp:" , self.__sockt.server_response)
+            with self.__sockt.lock:
+                if(self.__sockt.server_response):
+                    print(self.__sockt.server_response)
+                    self.__sockt.server_responses = None
 
 
 
@@ -109,8 +108,8 @@ class ClientSocket():
     #RECEPCION DE MENSAJES DEL SOCKET SERVIDOR ---------------------------
     def receive(self):
         while True:
-            #with self.lock:
-            self.server_response = json.loads(self.__sockt.recv(1024).decode("utf-8"))
+            with self.lock:
+                self.server_response = json.loads(self.__sockt.recv(1024).decode("utf-8"))
 
 
 
