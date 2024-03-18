@@ -65,7 +65,7 @@ class ServerSocket:
                 if(data['operacion'] == 'new_message'):
                     for client in self.client_sockets:
                         if client != client_socket:
-                            client.send(data['message'].encode("utf-8"))
+                            client[0].send(data['msg'].encode("utf-8"))
 
         except BaseException as errorType:
             self.utils.error_handler(errorType)
