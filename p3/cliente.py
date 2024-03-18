@@ -14,53 +14,52 @@ from utilities import Utilities
 class ControlPrincipal():
     def __init__(self, params):
         self.__sockt = params["sockt"]
-        
+        self.__utils = Utilities()
+    
+        self.__utils.clear_console()
+        self.nombre = input("Ingrese su nombre: ")
+       
         #Nuevo hilo para enviar mensajes del cliente ---------------------
-        threading.Thread(name='user_input', target=self.__user_input).start()
+        threading.Thread(name='user_messages', target=self.__user_messages).start()
 
         #Nuevo hilo para manejar las respuesta del servidor --------------
-        threading.Thread(name='user_input', target=self.__server_responses).start()
+        threading.Thread(name='server_responses', target=self.__server_responses).start()
+
+        
 
     
-    #control de entradas del usuario -------------------------------------
-    def __user_input(self):    
+    #control de mensajes que envía del usuario ----------------------------
+    def __user_messages(self):    
         while True:
             msj = input()
             
             if msj.lower() == 'exit': break
 
-            self.__sockt.send(msj)
+            with self.__sockt.lock:
+                self.__sockt.server_response = None
 
+            self.__sockt.send(
+                json.dumps({
+                    'operacion': 'new_message',
+                    'msg': (self.nombre + ': ' + msj)
+                })
+            )
+
+    
+    
     #control de respuestas del servidor ----------------------------------
     def __server_responses(self):
         while True:
             with self.__sockt.lock:
-                if not self.__sockt.server_response: pass
+                
+                if not self.__sockt.server_response:
+                    pass
                 else:
                     resp = json.loads(self.__sockt.server_response)
-                    #print(resp)
-
-                    if resp["estatus"] != "rejected":
-                        messagebox.showinfo("Respuesta", resp["response"])
-
-                    else:
-                        messagebox.showwarning("Error:", "Trama rechazada")
-                    
-                    break
+                    print(resp)
+                    self.__server_responses = None
 
 
-    #ACCION DE BOTON LOGIN -----------------------------------------------
-    def validar_trama(self):
-        self.sockt.server_response = None
-
-        self.sockt.send(
-            json.dumps({
-                "operacion": "consultar-trama",
-                "trama": self.entry_trama.get(),
-            })            
-        )
-
-  
 
 
 
@@ -82,15 +81,11 @@ class ClientSocket():
         self.lock = threading.Lock()
         self.server_response = None
 
-
         try:
             self.__utils.clear_console()
             self.__sockt = socket.socket(socket.AF_INET, socket.SOCK_STREAM)    
             self.__sockt.connect((server_ip, server_port))
-            
-            #Nuevo hilo para escuchar al servidor-------------------------
-            threading.Thread(name='thread_server_responses', target=self.receive).start()
-            
+                        
             print("===============================================================")
             print(f"\nSocket Cliente Establecido:\nhost: {server_ip}\nport: {server_port}\n")
             print("===============================================================")
@@ -99,15 +94,20 @@ class ClientSocket():
             self.__utils.error_handler(errorType)
             self.__socket.close()
 
+    
+    
+    
     #ENVIO DE MENSAJES A SOCKET SERVIDOR ---------------------------------
     def send(self, message):
         self.__sockt.send(message.encode("utf-8"))
     
+    
+    
+    
     #RECEPCION DE MENSAJES DEL SOCKET SERVIDOR ---------------------------
     def receive(self):
-        while True:
-            with self.lock:
-                self.server_response = self.__sockt.recv(1024).decode("utf-8")
+        with self.lock:
+            self.server_response = self.__sockt.recv(1024).decode("utf-8")
 
 
 

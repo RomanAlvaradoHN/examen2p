@@ -35,6 +35,7 @@ class ServerSocket:
         
         except BaseException as errorType:
             self.utils.error_handler(errorType)
+            self.server_socket.close()
 
     
     
@@ -43,47 +44,35 @@ class ServerSocket:
         try:
             while True:
                 new_socket = self.server_socket.accept()
-
                 print(f"New client connection from {new_socket[1][0]}")
-
                 self.client_sockets.append(new_socket)
-
 
                 #Hilo para comunicacion de cada sockets cliente---------------
                 threading.Thread(name='th_client_controller', target = self.__operation_controller, args=[new_socket]).start()
 
         except BaseException as errorType:
             self.utils.error_handler(errorType)
+            self.server_socket.close()
 
 
 
     #ORQUESTADOR DE OPERACIONES ------------------------------------------
-    def __operation_controller(self, new_socket):
+    def __operation_controller(self, client_socket):
         try:
-            client_socket, client_address = new_socket
-
             while True:
-                data = json.loads(client_socket.recv(1024).decode("utf-8"))
+                data = json.loads(client_socket.recv(1024).decode("utf-8"))                    
 
-                if data["operacion"] == "chat":
-                    pass
-                    
+                if(data['operacion'] == 'new_message'):
+                    for client in self.client_sockets:
+                        if client != sender_socket:
+                            client.send(data['message'].encode("utf-8"))
 
-
-                
         except BaseException as errorType:
             self.utils.error_handler(errorType)
+            self.server_socket.close()
 
-
-
-
-
-
-class SocketMessenger():
-    pass
-
-
-
+ 
+ 
 
 
 
