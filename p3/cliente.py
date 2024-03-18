@@ -55,7 +55,7 @@ class ControlPrincipal():
             with self.__sockt.lock:
                 
                 if not self.__sockt.server_response:
-                    pass
+                    continue
                 else:
                     resp = json.loads(self.__sockt.server_response)
                     print(resp)

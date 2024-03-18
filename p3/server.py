@@ -60,8 +60,8 @@ class ServerSocket:
     def __operation_controller(self, sockt):
         try:
             while True:
-                data = json.loads(sockt.recv(1024).decode("utf-8"))                    
-                print(data)
+                data = json.loads(sockt.recv(1024).decode("utf-8"))
+                print(data['msg'])
 
                 if(data['operacion'] == 'new_message'):
                     for client in self.client_sockets:
