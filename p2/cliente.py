@@ -120,7 +120,7 @@ class ClientSocket():
 ############################################################################
 parametros = {
     "sockt": ClientSocket({
-        "server_ip": "ec2-18-224-165-170.us-east-2.compute.amazonaws.com",
+        "server_ip": "127.0.0.1",
         "server_port": 9999,
     })
 }
