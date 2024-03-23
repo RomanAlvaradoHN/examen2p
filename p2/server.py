@@ -255,7 +255,7 @@ class ServerSocket:
 if __name__ == "__main__":
 
     parametros = {
-        "server_ip": '172.31.20.154',
+        "server_ip": '127.0.0.1',
         "server_port": 9999,
     }
 
