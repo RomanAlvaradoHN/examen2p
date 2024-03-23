@@ -30,12 +30,12 @@ class ServerSocket:
             print("====================================================================")
             print(f"\n    Servidor escuchando en {host}:{port} \n")
             print("====================================================================")
-        
+
         except BaseException as errorType:
             self.utils.error_handler(errorType)
 
 
-    
+
     #CONTROLADOR DE NUEVOS SOCKET CLIENTE --------------------------------
     def __client_sockets_listener(self):
         try:
@@ -69,7 +69,7 @@ class ServerSocket:
                     client_socket.send(json.dumps(resp).encode("utf-8"))
 
 
-                
+
         except BaseException as errorType:
             self.utils.error_handler(errorType)
 
@@ -93,7 +93,7 @@ class ServerSocket:
             "02": "Costa Rica",
             "03": "Mexico"
         }
-        
+
         categoria_edad = {
             "Menor de Edad": range(1, 19),
             "Adulto": range(19, 51),
@@ -105,7 +105,7 @@ class ServerSocket:
             "F": "Femenino"
         }
 
-        
+
         #Inicializar objeto respuesta ---------------------
         desgloce = {
             "estatus": "ok",
@@ -127,9 +127,9 @@ class ServerSocket:
                 desgloce['pais'] = 'País Desconocido'
         else:
             return {'estatus': 'rejected'}
-            
 
-        
+
+
 
         #Obtener edad -------------------------------------
         edad = trama[2:4]
@@ -143,15 +143,15 @@ class ServerSocket:
             return {'estatus': 'rejected'}
 
 
-        
+
         #Obtener genero -----------------------------------
         if trama[4] in genero:
             desgloce['genero'] = genero.get(trama[4])
         else:
             return {'estatus': 'rejected'}
 
-        
-        
+
+
         #Obtener fecha nacimiento -------------------------
         anio = trama[5:9]
         mes = trama[9:11]
@@ -160,14 +160,14 @@ class ServerSocket:
             anio = int(anio, 10)
             mes = int(mes, 10)
             dia = int(dia, 10)
-            
+
             if (mes in range(1, 13)) and (dia in range(1,32)):
                 desgloce['fecha_nacimiento'] = {'anio': anio, 'mes': mes, 'dia': dia}
             else:
                 return {'estatus': 'rejected'}
         else:
             return {'estatus': 'rejected'}
-        
+
 
         #Obtener nombre completo -------------------------
         desgloce["nombre"] = trama[13:].replace('-', ' ')
@@ -182,7 +182,7 @@ class ServerSocket:
 
 
 
-    
+
 
 
     ############################################################################
@@ -192,7 +192,7 @@ class ServerSocket:
         data = self.__desglosar_trama(trama)
 
         if(not data['estatus'] == 'rejected'):
-            
+
             #determinando nivel de adultez ----------------------------------------
             persona = ''
 
@@ -201,20 +201,20 @@ class ServerSocket:
 
             elif data['genero'] == 'Masculino' and data['edad'] == 'Menor de Edad':
                 persona = "un niño menor de edad"
-            
+
             elif data['genero'] == 'Femenino' and data['edad'] == 'Adulto':
                 persona = "una mujer adulta mayor de edad"
 
             elif data['genero'] == 'Masculino' and data['edad'] == 'Adulto':
                 persona = "un hombre adulto mayor de edad"
-            
+
             elif data['genero'] == 'Femenino' and data['edad'] == 'Tercera Edad':
                 persona = "una señora de tercera edad"
 
             elif data['genero'] == 'Masculino' and data['edad'] == 'Tercera Edad':
                 persona = "un señor de tercera edad"
 
-            
+
 
             #definiendo mensaje ---------------------------------------------------
             msj = f"Hola {data['nombre']}, veo que eres del país de {data['pais']} y tienes {data['anios']} años, lo que indica que eres {persona}."
@@ -224,21 +224,21 @@ class ServerSocket:
             aux = data["fecha_nacimiento"]
             fnac = datetime.date(aux['anio'], aux['mes'], aux['dia'])
             real_age = (datetime.date.today().year - aux['anio'])
-        
-            if real_age != data["anios"]:
+
+            if real_age != int(data["anios"]):
                 msj += f" Sin embargo, observo que tu fecha de nacimiento ({fnac.strftime('%d-%m-%Y')}), no concuerda con tu edad de {data['anios']} años."
 
-            
-            
+
+
             #añadir mensaje en la respuesta del cliente ----------------------------
             data.update({'response': msj})
 
         return data
 
 
-    
-    
-    
+
+
+
 
 
 
